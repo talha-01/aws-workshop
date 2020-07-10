@@ -26,5 +26,6 @@ def main_post():
         return render_template('index.html', developer_name = 'Talha', not_valid = True)
     return render_template('result.html', number_decimal = number, number_roman = roman_converter(number), developer_name = 'Talha')
 
+
 if __name__ == '__main__':
-    app.run('0.0.0.0', port = 80)
+    app.run()
