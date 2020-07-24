@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin_1:Admin_123@phonebook.c7s3y2m1dquv.us-west-2.rds.amazonaws.com:3306/phone_book'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///phone_book.db'
 db = SQLAlchemy(app)
 def init_phone_book_db():
     drop_table = 'DROP TABLE IF EXISTS phone_book;'
