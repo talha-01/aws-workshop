@@ -1,10 +1,12 @@
 from flask import Flask, abort, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
+import os
+
 # import pymysql.cursors
 
 app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin_1:Admin_123@phonebook.c7s3y2m1dquv.us-west-2.rds.amazonaws.com:3306/phone_book'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('RDS_ENDPOINT')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin_1:Admin_123@phonebook.c7s3y2m1dquv.us-west-2.rds.amazonaws.com:3306/phone_book'
 db = SQLAlchemy(app)
 def init_phone_book_db():
     drop_table = 'DROP TABLE IF EXISTS phone_book;'
