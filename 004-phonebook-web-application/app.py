@@ -80,7 +80,7 @@ def home():
     if request.method == 'POST':
         keyword = request.form['username']
         persons = search_person(keyword.title())
-        if persons:
+        if persons.strip():
             return render_template('index.html', developer_name = 'Talha', show_result = True, keyword = keyword, persons = persons, no_result = False)
         else:
             return render_template('index.html', developer_name = 'Talha', show_result = False, keyword = keyword, persons = persons, no_result = True)
@@ -115,7 +115,7 @@ def update():
             errors = ['Name cannot be empty.', 'Name of person should be text.']
             return render_template('add-update.html', developer_name = 'Talha', action_name = 'Update', not_valid = True, message = f'Invalid input: {errors[bool(name.strip())]}', show_result = False)
         if not find_person(name):
-            return render_template('add-update.html', developer_name = 'Talha', action_name = 'Update', not_valid = True, message = f'No record found for {name}', show_result = False)
+            return render_template('add-update.html', developer_name = 'Talha', action_name = 'Update', not_valid = True, message = f"No record found for '{name}'", show_result = False)
         number = request.form['phonenumber']
         if not number.isdecimal():
             errors = ['Phone number can not be empty.', 'Phone number should be a number and consist of 10 digits.']
