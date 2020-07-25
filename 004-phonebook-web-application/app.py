@@ -5,8 +5,9 @@ import os
 # import pymysql.cursors
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('RDS_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://adasda:adasd32141@sm16qwdpq610d1x.c7s3y2m1dquv.us-west-2.rds.amazonaws.com:3306/phone_book'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin_1:Admin_123@phonebook.c7s3y2m1dquv.us-west-2.rds.amazonaws.com:3306/phone_book'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 def init_phone_book_db():
     drop_table = 'DROP TABLE IF EXISTS phone_book;'
@@ -148,4 +149,4 @@ def whole_list():
 
 if __name__ == '__main__':
     init_phone_book_db()
-    app.run('0.0.0.0', port=80, debug = True)
+    app.run('0.0.0.0', port = 80, debug = True)
