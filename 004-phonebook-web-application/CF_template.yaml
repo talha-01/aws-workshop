@@ -72,16 +72,17 @@ Mappings:
     us-west-2:
       'vpc': vpc-46fa973e
 Resources:
-  myDB:
+  MyDB:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      DBName: phonebook
-      AllocatedStorage: '100'
+      DBName: phone_book
+      AllocatedStorage: '20'
       DBInstanceClass: db.t2.micro
       Engine: MySQL
       EngineVersion: 8.0.19
       MasterUsername: !Ref DBUser
       MasterUserPassword: !Ref DBPassword
+      PubliclyAccessible: false
   WebServerGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -90,9 +91,9 @@ Resources:
         - !Ref 'AWS::Region'
         - 'all'
       LaunchConfigurationName: !Ref LaunchConfig
-      HealthCheckType: ELB
+      HealthCheckType: EC2
       HealthCheckGracePeriod: 90
-      DesiredCapacity: '2'
+      DesiredCapacity: '1'
       MinSize: '1'
       MaxSize: '3'
       TargetGroupARNs:
@@ -164,9 +165,11 @@ Resources:
           pip3 install flask
           pip3 install flask_sqlalchemy
           pip3 install pymysql
-          wget https://raw.githubusercontent.com/talha-01/aws-workshop/master/002-milliseconds-converter/app.py
-          wget -P templates https://raw.githubusercontent.com/talha-01/aws-workshop/master/002-milliseconds-converter/templates/index.html
-          wget -P templates https://raw.githubusercontent.com/talha-01/aws-workshop/master/002-milliseconds-converter/templates/result.html
+          cd /home/ec2-user
+          wget https://raw.githubusercontent.com/talha-01/aws-workshop/master/004-phonebook-web-application/app.py
+          wget -P templates https://github.com/talha-01/aws-workshop/blob/master/004-phonebook-web-application/templates/delete.html
+          wget -P templates https://github.com/talha-01/aws-workshop/blob/master/004-phonebook-web-application/templates/index.html
+          wget -P templates https://github.com/talha-01/aws-workshop/blob/master/004-phonebook-web-application/templates/add-update.html
           export RDS_ENDPOINT='!Ref JDBCConnectionString'
   ApplicationLoadBalancer:
     Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
@@ -245,7 +248,11 @@ Outputs:
     Description: JDBC connection string for the database
     Value: !Join 
       - ''
-      - - 'jdbc:mysql://'
+      - - 'mysql+pymysql://'
+        - !Ref DBUser
+        - ':'
+        - !Ref DBPassword
+        - '@'
         - !GetAtt 
           - MyDB
           - Endpoint.Address
@@ -254,4 +261,4 @@ Outputs:
           - MyDB
           - Endpoint.Port
         - /
-        - !Ref DBName
+        - phonebook
