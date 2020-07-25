@@ -2,13 +2,11 @@ from flask import Flask, abort, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-# import pymysql.cursors
-
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('RDS_URI')
 file = open('/RDS_URI')
 RDS_URI = file.readlines()[0]
 file.close()
+
 app.config['SQLALCHEMY_DATABASE_URI'] = RDS_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
