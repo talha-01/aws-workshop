@@ -54,7 +54,7 @@ def search_person(word):
     '''
     result = db.session.execute(query)
     persons = [{'id':row[0], 'name':row[1], 'number':row[2]} for row in result]
-    return persons
+    return persons if word.strip() else False
 
 def find_person(word):
     query = f'''
@@ -80,7 +80,7 @@ def home():
     if request.method == 'POST':
         keyword = request.form['username']
         persons = search_person(keyword.title())
-        if persons.strip():
+        if persons:
             return render_template('index.html', developer_name = 'Talha', show_result = True, keyword = keyword, persons = persons, no_result = False)
         else:
             return render_template('index.html', developer_name = 'Talha', show_result = False, keyword = keyword, persons = persons, no_result = True)
