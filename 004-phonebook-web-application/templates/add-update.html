@@ -65,8 +65,8 @@
   <div><img src="https://clarusway.com/wp-content/uploads/2020/06/clarusway_logo.png" /></div>
 
   <h1>Project : Phonebook Application</h1>
-  <h2>Welcome to {{developer_name}}'s Phonebook Application</h2>
-  <h2 class="sectionnote">Enter a name and phone number to {{action_name}}</h2>
+  <h2>Welcome to {{ developer_name }}'s Phonebook Application</h2>
+  <h2 class="sectionnote">Enter a name and phone number to {{ action_name }}</h2>
 
   <form action="#" method="post">
     <label for="name"><b>Name:</b></label>
@@ -85,11 +85,11 @@
   <br>
   <br>
   <a href='/'>Find a contact?</a><br>
-  {% if action_name.title() == 'Add'%}
+  {% if action_name.title() == 'Add' %}
   <a href='/update'>Update a contact?</a><br>
   {% else %}
   <a href='/add'>Add a contact?</a><br>
-  {% endif%}
+  {% endif %}
   <a href='/delete'>Delete a contact?</a><br>
   <p class="footnote"><i>This app is developed in Python by <b>{{ developer_name }}</b> and deployed with Flask on AWS Cloud using Clouldformation Service.</i></p>
 </body>
