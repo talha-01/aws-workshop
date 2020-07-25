@@ -5,8 +5,7 @@ import os
 # import pymysql.cursors
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///phone_book.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('RDS_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('RDS_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 def init_phone_book_db():
