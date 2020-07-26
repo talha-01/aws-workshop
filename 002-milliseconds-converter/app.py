@@ -14,12 +14,12 @@ def milsec_to_hour(milsec):
 
 @app.route('/', methods = ['GET'])
 def main_get():
-    return render_template('index.html', developer = 'Talha', not_valid = False)
+    return render_template('index.html', developer_name = 'Talha', not_valid = False)
 
 @app.route('/', methods = ['POST'])
 def home():
     milsec = request.form['number']
-    if milsec.isdecimal() and milsec != '0':
+    if milsec.isdecimal() and int(milsec) > 0:
         return render_template('result.html', developer_name = 'Talha', milliseconds=milsec, result=milsec_to_hour(int(milsec)))
     return render_template('index.html', developer_name = 'Talha', not_valid = True)
     
