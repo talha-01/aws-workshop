@@ -103,6 +103,8 @@ Resources:
       MasterUsername: !Ref DBUser
       MasterUserPassword: !Ref DBPassword
       PubliclyAccessible: false
+      DBSecurityGroups:
+        - !Ref MyDbSecurityGroup
   WebServerGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -256,19 +258,13 @@ Resources:
         - DefaultVPC
         - !Ref 'AWS::Region'
         - 'vpc'
-  DbSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Open database for access
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '3306'
-          ToPort: '3306'
-          SourceSecurityGroupId: !Ref InstanceSecurityGroup
-      VpcId: !FindInMap 
-        - DefaultVPC
-        - !Ref 'AWS::Region'
-        - 'vpc'
+  MyDbSecurityGroup:
+    Type: AWS::RDS::DBSecurityGroup
+    Properties: 
+      DBSecurityGroupIngress: 
+        - EC2SecurityGroupId: !Ref InstanceSecurityGroup
+      GroupDescription: Ingress for EC2 security group
+
 Outputs:
   URL:
     Description: URL of the website
