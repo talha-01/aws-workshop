@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This template deploys a static website S3 served through CloudFront and Route 53,
+  leveraging Original Access Identity feature of S3 and CloudFront and Certificate
+  Manager to make a secure website. XXXXXXXXXXXX below should be replaced with your CloudFront
+  Origin Access Identity, which can be easily found on CloudFront service under Security tab.
+  For this template to run, the account should have a hosted zone in Route53.
+  The template creates a ready static website without uploading any item, therefore you 
+  need to add your content to display along with index.html file into your bucket. 
+Parameters:
+  DomainName:
+    Type: AWS::Route53::HostedZone::Id
+    Description: The DNS name of an existing Amazon Route 53 hosted zone
+    ConstraintDescription: must be a valid DNS zone name.
+  FullDomainName:
+    Type: String
+    Description: The full name for the web application
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
+    ConstraintDescription: Must be a valid DNS Zone name
+    Default: bucket.example.com
+Resources:
+  BucketForWebsiteContent:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Ref FullDomainName
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  BucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref BucketForWebsiteContent
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects 
+            Action: "s3:GetObject"
+            Effect: Allow
+            Principal: 
+              "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity XXXXXXXXXXXX"
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref BucketForWebsiteContent, '/*']]
+              
+  Certificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      CertificateTransparencyLoggingPreference: ENABLED
+      DomainName: !Ref FullDomainName
+      DomainValidationOptions:
+        - DomainName: !Ref FullDomainName
+          HostedZoneId: !Ref DomainName
+      ValidationMethod: DNS
+  
+  WebsiteCDN:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Comment: CDN for S3-backed website
+        Aliases: [!Ref BucketForWebsiteContent]
+        Enabled: 'true'
+        DefaultCacheBehavior:
+          AllowedMethods: [GET, HEAD]
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: none
+          TargetOriginId: any-origin
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !Join ['', [!Ref BucketForWebsiteContent, '.s3.amazonaws.com']]
+            Id: any-origin
+            S3OriginConfig:
+              OriginAccessIdentity: 'origin-access-identity/cloudfront/XXXXXXXXXXXX'
+
+        HttpVersion: http2
+        ViewerCertificate:
+          AcmCertificateArn: !Ref Certificate
+          MinimumProtocolVersion: TLSv1.2_2019
+          SslSupportMethod: sni-only
+  WebAddress:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt ['WebsiteCDN', 'DomainName']
+        HostedZoneId: Z2FDTNDATAQYW2
+      HostedZoneId: !Ref DomainName
+      Name: !Join ['', [!Ref FullDomainName, '.']]
+      Type: A
+Outputs:
+  FQDN:
+    Description: Full Domain Name of your website
+    Value: !Join ['', ['https://', !Ref WebAddress]]
+  CdnEndpoint:
+    Description: Endpoint for CloudFront Distribution
+    Value: !Sub '${WebsiteCDN.DomainName}'
+  S3BucketName  :
+    Description: S3 static website link
+    Value: !GetAtt BucketForWebsiteContent.WebsiteURL
+  
