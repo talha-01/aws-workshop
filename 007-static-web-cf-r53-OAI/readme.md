@@ -1,5 +1,5 @@
 
-# A template for a secure static website leveraging s3, CloudFront and Route53 and resticting access to s3 bucket with OAI.
+# A template for a secure static website leveraging s3, CloudFront and Route53, and restricting access to s3 bucket with OAI.
 
 ## The modifications you need to do:
 
