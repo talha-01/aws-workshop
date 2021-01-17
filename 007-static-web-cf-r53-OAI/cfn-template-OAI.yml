@@ -2,11 +2,7 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: |
   This template deploys a static website S3 served through CloudFront and Route 53,
   leveraging Original Access Identity feature of S3 and CloudFront and Certificate
-  Manager to make a secure website. XXXXXXXXXXXX below should be replaced with your CloudFront
-  Origin Access Identity, which can be easily found on CloudFront service under Security tab.
-  For this template to run, the account should have a hosted zone in Route53.
-  The template creates a ready static website without uploading any item, therefore you 
-  need to add your content to display along with index.html file into your bucket. 
+  Manager to make a secure website. 
 Parameters:
   DomainName:
     Type: AWS::Route53::HostedZone::Id
