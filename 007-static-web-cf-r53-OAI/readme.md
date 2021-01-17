@@ -3,7 +3,7 @@
 
 # Prerequistes
 
-- A Public Hosted Zone Route53
+- A Public Hosted Zone on Route53
 
 - Content for your website
 
