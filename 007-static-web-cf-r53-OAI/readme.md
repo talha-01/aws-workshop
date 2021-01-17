@@ -1,17 +1,19 @@
 
-# A template for a secure static website leveraging s3, CloudFront and Route53, and restricting access to s3 bucket with OAI.
+# A template for a secure static website leveraging s3, CloudFront and Route53, and restricting access to s3 bucket with OAI
 
-## The modifications you need to do:
+# Prerequistes
 
-- Find your Original Access Idendity.
+- A Public Hosted Zone Route53
 
-![OAI](OAI.png)
+- Content for your website
 
-- Change the XXXXXXXXXXXX in the bucket policy with your OAI.
+# Steps
 
-![bucket-policy](bucket-policy.png)
+- Run the template
 
-- Change the XXXXXXXXXXXX in the CloudFormation origins configuration with your OAI.
+- Upload your content to the S3 Bucket after the template creates it
 
-![origins-configuration](origins-configuration.png)
+# Diagram of Services
+
+![Resource Diagran](S3-CF-OAI.png)
 
